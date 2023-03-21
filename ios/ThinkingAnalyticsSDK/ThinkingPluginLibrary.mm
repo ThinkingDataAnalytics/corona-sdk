@@ -252,7 +252,7 @@ ThinkingPluginLibrary::thinkingBridging( lua_State *L )
             CoronaLuaDispatchEvent( L, library->GetListener(), 0 );
         }
     } else {
-        NSLog(@"[Error] ThinkingPluginLibrary 调用的方法不存在: %s", word);
+        NSLog(@"[Error] ThinkingPluginLibrary，the method is not existed : %s", word);
     }
         
     return 0;
