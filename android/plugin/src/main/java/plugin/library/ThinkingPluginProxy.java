@@ -310,4 +310,13 @@ public class ThinkingPluginProxy {
         return jsonObject;
     }
 
+    public static void calibrateTime(JSONObject params) {
+        long timestamp = params.optLong("timestamp");
+        ThinkingAnalyticsSDK.calibrateTime(timestamp);
+    }
+
+    public static void calibrateTimeWithNtp(JSONObject params) {
+        String ntpServer = params.optString("ntpServer");
+        ThinkingAnalyticsSDK.calibrateTimeWithNtp(ntpServer);
+    }
 }

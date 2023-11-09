@@ -16,6 +16,17 @@
 
 @implementation ThinkingPluginProxy
 
++ (ThinkingAnalyticsSDK *)sharedInstance:(NSString *)appId {
+    ThinkingAnalyticsSDK * instance = nil;
+    if (appId != nil && [appId length] > 0) {
+        instance = [ThinkingAnalyticsSDK sharedInstanceWithAppid:appId];
+    }
+    if (instance == nil) {
+        instance = [ThinkingAnalyticsSDK sharedInstance];
+    }
+    return instance;
+}
+
 + (void)shareInstance:(NSDictionary *)params {
     NSString *appId = params[@"appId"];
     NSString *serverUrl = params[@"serverUrl"];
@@ -56,10 +67,9 @@
 + (void)track:(NSDictionary *)params {
     NSString *eventName = params[@"eventName"];
     NSDictionary *properties = params[@"properties"];
-    [[ThinkingAnalyticsSDK sharedInstance] track:eventName
-                                      properties:properties
-                                            time:[NSDate new]
-                                        timeZone:[NSTimeZone defaultTimeZone]];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] track:eventName
+                                      properties:properties];
 }
 
 + (void)trackFirst:(NSDictionary *)params {
@@ -68,7 +78,8 @@
     NSDictionary *properties = params[@"properties"];
     TDFirstEventModel *eventModel = [[TDFirstEventModel alloc] initWithEventName:eventName firstCheckID:eventId];
     eventModel.properties = properties;
-    [[ThinkingAnalyticsSDK sharedInstance] trackWithEventModel:eventModel];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] trackWithEventModel:eventModel];
 }
 
 + (void)trackUpdate:(NSDictionary *)params {
@@ -77,7 +88,8 @@
     NSDictionary *properties = params[@"properties"];
     TDUpdateEventModel *eventModel = [[TDUpdateEventModel alloc] initWithEventName:eventName eventID:eventId];
     eventModel.properties = properties;
-    [[ThinkingAnalyticsSDK sharedInstance] trackWithEventModel:eventModel];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] trackWithEventModel:eventModel];
 }
 
 + (void)trackOverwrite:(NSDictionary *)params {
@@ -86,68 +98,82 @@
     NSDictionary *properties = params[@"properties"];
     TDOverwriteEventModel *eventModel = [[TDOverwriteEventModel alloc] initWithEventName:eventName eventID:eventId];
     eventModel.properties = properties;
-    [[ThinkingAnalyticsSDK sharedInstance] trackWithEventModel:eventModel];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] trackWithEventModel:eventModel];
 }
 
 + (void)timeEvent:(NSDictionary *)params {
     NSString *eventName = params[@"eventName"];
-    [[ThinkingAnalyticsSDK sharedInstance] timeEvent:eventName];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] timeEvent:eventName];
 }
 
 + (void)userSet:(NSDictionary *)params {
     NSDictionary *properties = params[@"properties"];
-    [[ThinkingAnalyticsSDK sharedInstance] user_set:properties];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] user_set:properties];
 }
 
 + (void)userSetOnce:(NSDictionary *)params {
     NSDictionary *properties = params[@"properties"];
-    [[ThinkingAnalyticsSDK sharedInstance] user_setOnce:properties];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] user_setOnce:properties];
 }
 
 + (void)userUnset:(NSDictionary *)params {
     NSString *property = params[@"property"];
-    [[ThinkingAnalyticsSDK sharedInstance] user_unset:property];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] user_unset:property];
 }
 
 + (void)userAdd:(NSDictionary *)params {
     NSDictionary *properties = params[@"properties"];
-    [[ThinkingAnalyticsSDK sharedInstance] user_add:properties];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] user_add:properties];
 }
 
 + (void)userAppend:(NSDictionary *)params {
     NSDictionary *properties = params[@"properties"];
-    [[ThinkingAnalyticsSDK sharedInstance] user_append:properties];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] user_append:properties];
 }
 
 + (void)userUniqAppend:(NSDictionary *)params {
     NSDictionary *properties = params[@"properties"];
-    [[ThinkingAnalyticsSDK sharedInstance] user_uniqAppend:properties];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] user_uniqAppend:properties];
 }
 
 + (void)userDel:(NSDictionary *)params {
-    [[ThinkingAnalyticsSDK sharedInstance] user_delete];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] user_delete];
 }
 
 + (void)flush:(NSDictionary *)params {
-    [[ThinkingAnalyticsSDK sharedInstance] flush];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] flush];
 }
 
 + (void)login:(NSDictionary *)params {
     NSString *accountId = params[@"accountId"];
-    [[ThinkingAnalyticsSDK sharedInstance] login:accountId];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] login:accountId];
 }
 
 + (void)logout:(NSDictionary *)params {
-    [[ThinkingAnalyticsSDK sharedInstance] logout];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] logout];
 }
 
 + (void)identify:(NSDictionary *)params {
     NSString *distinctId = params[@"distinctId"];
-    [[ThinkingAnalyticsSDK sharedInstance] identify:distinctId];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] identify:distinctId];
 }
 
 + (NSDictionary *)getDistinctId:(NSDictionary *)params {
-    NSString *distinctId = [[ThinkingAnalyticsSDK sharedInstance] getDistinctId];
+    NSString *appId = params[@"appId"];
+    NSString *distinctId = [[ThinkingPluginProxy sharedInstance:appId] getDistinctId];
     NSDictionary *ret = @{
         @"message": @{ @"distinctId": distinctId },
         @"type": @"getDistinctId"
@@ -156,7 +182,8 @@
 }
 
 + (NSDictionary *)getDeviceId:(NSDictionary *)params {
-    NSString *deviceId = [[ThinkingAnalyticsSDK sharedInstance] getDeviceId];
+    NSString *appId = params[@"appId"];
+    NSString *deviceId = [[ThinkingPluginProxy sharedInstance:appId] getDeviceId];
     NSDictionary *ret = @{
         @"message": @{ @"deviceId": deviceId },
         @"type": @"getDeviceId"
@@ -166,16 +193,19 @@
 
 + (void)setSuperProperties:(NSDictionary *)params {
     NSDictionary *properties = params[@"properties"];
-    [[ThinkingAnalyticsSDK sharedInstance] setSuperProperties:properties];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] setSuperProperties:properties];
 }
 
 + (void)unsetSuperProperties:(NSDictionary *)params {
     NSString *property = params[@"property"];
-    [[ThinkingAnalyticsSDK sharedInstance] unsetSuperProperty:property];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] unsetSuperProperty:property];
 }
 
 + (NSDictionary *)getSuperProperties:(NSDictionary *)params {
-    NSDictionary *properties = [[ThinkingAnalyticsSDK sharedInstance] currentSuperProperties];
+    NSString *appId = params[@"appId"];
+    NSDictionary *properties = [[ThinkingPluginProxy sharedInstance:appId] currentSuperProperties];
     NSDictionary *ret = @{
         @"message": @{ @"properties": properties },
         @"type": @"getSuperProperties"
@@ -184,11 +214,13 @@
 }
 
 + (void)clearSuperProperties:(NSDictionary *)params {
-    [[ThinkingAnalyticsSDK sharedInstance] clearSuperProperties];
+    NSString *appId = params[@"appId"];
+    [[ThinkingPluginProxy sharedInstance:appId] clearSuperProperties];
 }
 
 + (NSDictionary *)getPresetProperties:(NSDictionary *)params {
-    NSDictionary *properties = [[[ThinkingAnalyticsSDK sharedInstance] getPresetProperties] toEventPresetProperties];
+    NSString *appId = params[@"appId"];
+    NSDictionary *properties = [[[ThinkingPluginProxy sharedInstance:appId] getPresetProperties] toEventPresetProperties];
     NSDictionary *ret = @{
         @"message": @{ @"properties": properties },
         @"type": @"getPresetProperties"
@@ -200,6 +232,16 @@
     NSString *libName = params[@"libName"];
     NSString *libVersion = params[@"libVersion"];
     [ThinkingAnalyticsSDK setCustomerLibInfoWithLibName:libName libVersion:libVersion];
+}
+
++ (void)calibrateTime:(NSDictionary *)params {
+    NSTimeInterval timestamp = [params[@"timestamp"] doubleValue];
+    [ThinkingAnalyticsSDK calibrateTime:timestamp];
+}
+
++ (void)calibrateTimeWithNtp:(NSDictionary *)params {
+    NSString *ntpServer = params[@"ntpServer"];
+    [ThinkingAnalyticsSDK calibrateTimeWithNtp:ntpServer];
 }
 
 @end

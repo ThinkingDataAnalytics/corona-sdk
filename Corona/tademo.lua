@@ -1,7 +1,7 @@
 tademo = {}
 
 local json = require( "json" )
-local ThinkingAnalyticsAPI = require("ThinkingAnalyticsAPI")
+local TDAnalytics = require("TDAnalytics")
 
 tademo.startRun = function ()
     tademo.loadUIElements()
@@ -14,14 +14,15 @@ tademo.loadUIElements = function ()
     	"track", "trackFirst", "trackUpdate", "trackOverwrite", "timeEvent", 
     	"userSet", "userSetOnce", "userUnset", "userAdd", "userAppend", "userUniqAppend", "userDel", 
     	"flush", "login", "logout", "identify", "getDistinctId", "getDeviceId", 
-    	"setSuperProperties", "unsetSuperProperties", "getSuperProperties", "clearSuperProperties", "getPresetProperties" 
+    	"setSuperProperties", "unsetSuperProperties", "getSuperProperties", "clearSuperProperties", "getPresetProperties",
+        "calibrateTime", "calibrateTimeWithNtp"
     }
     for i = 1,(#eventList) do
     	local diff = 60
     	if i%2==1 then
     		diff = -60
     	end
-    	local eventText = display.newText( eventList[i], display.contentCenterX+diff, 30*(((i-1)-((i-1)%2))/2)+60, native.systemFont, 14 )
+    	local eventText = display.newText( eventList[i], display.contentCenterX+diff, 30*(((i-1)-((i-1)%2))/2)+100, native.systemFont, 14 )
     	eventText:setFillColor( 0.3, 0.3, 0.3 )
     	eventText:addEventListener( "tap", function ()
     		local funcName = eventList[i]
@@ -35,121 +36,192 @@ tademo.loadUIElements = function ()
     end
 end
 
+local _appId_1 = "22e445595b0f42bd8c5fe35bc44b88d6"
+local _serverUrl_1 = "https://receiver-ta-dev.thinkingdata.cn"
+
+local _appId_2 = "debug-appid"
+local _serverUrl_2 = "https://receiver-ta-dev.thinkingdata.cn"
+
 tademo.shareInstance = function ()
     local params = {
-        appId = "22e445595b0f42bd8c5fe35bc44b88d6",
-        serverUrl = "https://receiver-ta-dev.thinkingdata.cn",
-        enableLog = true,
+        appId = _appId_1,
+        serverUrl = _serverUrl_1,
+        enableLog = true --,
         -- debugMode = "normal",  -- normal, debug, debugOnly
         -- autoTrack = {
         -- 	"appStart", "appEnd", "appInstall"
         -- }
     }
-    ThinkingAnalyticsAPI.shareInstance( params )
+    TDAnalytics.init( params )
+
+    local params_2 = {
+        appId = _appId_2,
+        serverUrl = _serverUrl_2,
+        enableLog = true
+        -- debugMode = "normal",  -- normal, debug, debugOnly
+        -- autoTrack = {
+        -- 	"appStart", "appEnd", "appInstall"
+        -- }
+    }
+    TDAnalytics.init( params_2 )
 end
 tademo.track = function ()    
-    ThinkingAnalyticsAPI.track( "TA" )
-    -- ThinkingAnalyticsAPI.track( "TA", { 
-    --     key_1 = "value_1" 
-    -- } )
+    TDAnalytics.track( "TA", { key_1 = "value_1" } )
+    TDAnalytics.track( "TA", { key_2 = "value_2" }, _appId_2)
 end
 tademo.trackFirst = function ()
-    ThinkingAnalyticsAPI.trackFirst( "FirstEvent", { 
+    TDAnalytics.trackFirst( "FirstEvent", { 
         key_1 = "value_1" 
-    } )
-    -- ThinkingAnalyticsAPI.trackFirst( "FirstEvent", { 
-    --     key_1 = "value_1" 
-    -- }, "FirstEventId" )
+    })
+    TDAnalytics.trackFirst( "FirstEvent", { 
+        key_2 = "value_2" 
+    }, "FirstEventId_2", _appId_2 )
 end
 tademo.trackUpdate = function ()
-    ThinkingAnalyticsAPI.trackUpdate( "UpdateEvent", { 
+    TDAnalytics.trackUpdate( "UpdateEvent", { 
         key_1 = "value_1" 
-    }, "UpdateEventId" )
+    }, "UpdateEventId_1" )
+    TDAnalytics.trackUpdate( "UpdateEvent", { 
+        key_2 = "value_2" 
+    }, "UpdateEventId_2", _appId_2 )
 end
 tademo.trackOverwrite = function () 
-    ThinkingAnalyticsAPI.trackOverwrite( "OverwriteEvent", { 
+    TDAnalytics.trackOverwrite( "OverwriteEvent", { 
         key_1 = "value_1" 
-    }, "OverwriteEventId" )
+    }, "OverwriteEventId_1" )
+    TDAnalytics.trackOverwrite( "OverwriteEvent", { 
+        key_2 = "value_2" 
+    }, "OverwriteEventId_2", _appId_2 )
 end
 tademo.timeEvent = function ()
-    ThinkingAnalyticsAPI.timeEvent( "TA" )
+    TDAnalytics.timeEvent( "TA" )
+    TDAnalytics.timeEvent( "TA", _appId_2 )
 end
 tademo.userSet = function ()    
-    ThinkingAnalyticsAPI.userSet( { 
-        name = "Tiki",
+    TDAnalytics.userSet( { 
+        name = "Tiki_1",
         age = 20
     } )
+    TDAnalytics.userSet( { 
+        name = "Tiki_2",
+        age = 20
+    }, _appId_2 )
 end
 tademo.userSetOnce = function ()
-    ThinkingAnalyticsAPI.userSetOnce( { 
-        gender = "male"
+    TDAnalytics.userSetOnce( { 
+        gender = "male_1"
     } )
+    TDAnalytics.userSetOnce( { 
+        gender = "male_2"
+    }, _appId_2 )
 end
 tademo.userUnset = function ()
-    ThinkingAnalyticsAPI.userUnset( "name" )
+    TDAnalytics.userUnset( "name_1" )
+    TDAnalytics.userUnset( "name_2", _appId_2 )
 end
 tademo.userAdd = function ()
-    ThinkingAnalyticsAPI.userAdd( { 
+    TDAnalytics.userAdd( { 
         age = 1
     } )
+    TDAnalytics.userAdd( { 
+        age = 2
+    }, _appId_2 )
 end
 tademo.userAppend = function ()
-    ThinkingAnalyticsAPI.userAppend( { 
-        toys = { "ball" }
+    TDAnalytics.userAppend( { 
+        toys = { "ball_1" }
     } )
+    TDAnalytics.userAppend( { 
+        toys = { "ball_2" }
+    }, _appId_2 )
 end
 tademo.userUniqAppend = function ()
-    ThinkingAnalyticsAPI.userUniqAppend( { 
-        toys = { "ball", "apple" }
+    TDAnalytics.userUniqAppend( { 
+        toys = { "ball_1", "apple_1" }
     } )
+    TDAnalytics.userUniqAppend( { 
+        toys = { "ball_2", "apple_2" }
+    }, _appId_2 )
 end
 tademo.userDel = function ()
-    ThinkingAnalyticsAPI.userDel()
+    TDAnalytics.userDelete()
+    TDAnalytics.userDelete(_appId_2)
 end
 tademo.flush = function ()
-    ThinkingAnalyticsAPI.flush()
+    TDAnalytics.flush()
+    TDAnalytics.flush(_appId_2)
 end
 tademo.login = function ()
-    ThinkingAnalyticsAPI.login( "136" )
+    TDAnalytics.login( "136" )
+    TDAnalytics.login( "236", _appId_2 )
 end
 tademo.logout = function ()
-    ThinkingAnalyticsAPI.logout()
+    TDAnalytics.logout()
+    TDAnalytics.logout(_appId_2)
 end
 tademo.identify = function ()
-    ThinkingAnalyticsAPI.identify( "thinkers" )
+    TDAnalytics.setDistinctId( "thinkers_1" )
+    TDAnalytics.setDistinctId( "thinkers_2", _appId_2 )
 end
 tademo.getDistinctId = function ()
-    ThinkingAnalyticsAPI.getDistinctId( function (ret)
-        print( "@Corona: distinctId = " .. ret )
+    TDAnalytics.getDistinctId( function (ret)
+        print( "@Corona: distinctId_1 = " .. ret )
     end )
+    TDAnalytics.getDistinctId( function (ret)
+        print( "@Corona: distinctId_2 = " .. ret )
+    end, _appId_2 )
 end
 tademo.getDeviceId = function ()
-    ThinkingAnalyticsAPI.getDeviceId( function (ret)
-        print( "@Corona: deviceId = " .. ret )
+    TDAnalytics.getDeviceId( function (ret)
+        print( "@Corona: deviceId_1 = " .. ret )
     end )
+    TDAnalytics.getDeviceId( function (ret)
+        print( "@Corona: deviceId_2 = " .. ret )
+    end, _appId_2 )
 end
 tademo.setSuperProperties = function ()
-    ThinkingAnalyticsAPI.setSuperProperties( {
-        channel = "Apple Store",
+    TDAnalytics.setSuperProperties( {
+        channel = "Apple Store 1",
         vip_level = 100
     } )
+    TDAnalytics.setSuperProperties( {
+        channel = "Apple Store 2",
+        vip_level = 200
+    }, _appId_2 )
 end
 tademo.unsetSuperProperties = function ()
-    ThinkingAnalyticsAPI.unsetSuperProperties( "vip_level" )
+    TDAnalytics.unsetSuperProperties( "vip_level" )
+    TDAnalytics.unsetSuperProperties( "vip_level", _appId_2 )
 end
 tademo.getSuperProperties = function ()
-    ThinkingAnalyticsAPI.getSuperProperties( function (ret)
-        print( "@Corona: superProperties = " .. tademo.tableString(ret) )
+    TDAnalytics.getSuperProperties( function (ret)
+        print( "@Corona: superProperties_1 = " .. tademo.tableString(ret) )
     end )
+    TDAnalytics.getSuperProperties( function (ret)
+        print( "@Corona: superProperties_2 = " .. tademo.tableString(ret) )
+    end, _appId_2 )
 end
 tademo.clearSuperProperties = function ()
-    ThinkingAnalyticsAPI.clearSuperProperties()
+    TDAnalytics.clearSuperProperties()
+    TDAnalytics.clearSuperProperties(_appId_2)
 end
 tademo.getPresetProperties = function ()
-    ThinkingAnalyticsAPI.getPresetProperties( function (ret)
-        print( "@Corona: presetProperties = " .. tademo.tableString(ret) )
+    TDAnalytics.getPresetProperties( function (ret)
+        print( "@Corona: presetProperties_1 = " .. tademo.tableString(ret) )
     end )
+    TDAnalytics.getPresetProperties( function (ret)
+        print( "@Corona: presetProperties_2 = " .. tademo.tableString(ret) )
+    end, _appId_2 )
 end
+
+tademo.calibrateTime = function ()
+    TDAnalytics.calibrateTime(1672502400000)
+end
+
+tademo.calibrateTimeWithNtp = function ()
+    TDAnalytics.calibrateTimeWithNtp("time.apple.com")
+end
+
 
 tademo.tableString = function(tab)
 	local max_indent = 3	
