@@ -13,7 +13,7 @@ android {
 
 dependencies {
     implementation ':Corona@aar'
-    implementation 'cn.thinkingdata.android:ThinkingAnalyticsSDK:2.8.1.3'
+    implementation 'cn.thinkingdata.android:ThinkingAnalyticsSDK:3.0.0'
 }
 
 task extractPluginJar() {

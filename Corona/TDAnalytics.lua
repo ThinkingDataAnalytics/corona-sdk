@@ -7,7 +7,7 @@ local TDAnalytics = {}
 
 local json = require( "json" )
 
-local TE_LIB_VERSION = "2.0.0"
+local TE_LIB_VERSION = "2.0.1"
 local TE_LIB_NAME = "Corona"
 
 -- environment: simulator/device/browser

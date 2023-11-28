@@ -12,11 +12,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.thinkingdata.android.TDConfig;
-import cn.thinkingdata.android.TDFirstEvent;
-import cn.thinkingdata.android.TDOverWritableEvent;
-import cn.thinkingdata.android.TDUpdatableEvent;
-import cn.thinkingdata.android.ThinkingAnalyticsSDK;
+import cn.thinkingdata.analytics.TDConfig;
+import cn.thinkingdata.analytics.TDFirstEvent;
+import cn.thinkingdata.analytics.TDOverWritableEvent;
+import cn.thinkingdata.analytics.TDUpdatableEvent;
+import cn.thinkingdata.analytics.ThinkingAnalyticsSDK;
 
 public class ThinkingPluginProxy {
 
